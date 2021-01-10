@@ -28,7 +28,8 @@ const Container = () => {
   const [listHigh, setListHigh] = useState(itemList.current.length - 1);
   const [listMid, setListMid] = useState(0);
   const [itemFound, setItemFound] = useState("");
-  const [searchKeyValue, setSearchKeyValue] = useState(10)
+  const [searchKeyValue, setSearchKeyValue] = useState(0)
+  const [computationsTaken, setComputationsTaken] = useState(0)
 
   const delay = (delayInMS) => {
     return new Promise((resolve) => {
@@ -37,6 +38,7 @@ const Container = () => {
       }, delayInMS); //delay in milliseconds
     });
   };
+
   const _renderList = ({ list }) => {
     return list.map((elem, idx) => {
       if (idx === listMid) {
@@ -60,17 +62,18 @@ const Container = () => {
   };
 
   const _binarySearch = async (searchFor) => {
+    let computations = 0;
     const list = [...itemList.current];
     let low = 0;
     let high = list.length - 1;
     let mid = 0;
     while (low <= high) {
+      computations++;
       mid = Math.trunc((low + high) / 2);
       setListMid(mid);
-      await delay(500);
-      console.log("HIGH : ", high, ' MID : ', mid, ' LOW : ', low)
-      console.log(list[mid], "=== ", searchFor)
+      await delay(1000);
       if (list[mid] === searchFor) {
+        setComputationsTaken(computations)
         setItemFound("found");
         setListHigh(-1)
         setListLow(-1)
@@ -98,14 +101,30 @@ const Container = () => {
     }
   }
 
-
-
   const _onStartPress = () => {
     setListHigh(itemList.current.length - 1);
     setListLow(0);
-    setItemFound("");
+    setItemFound("search");
     _binarySearch(searchKeyValue);
   };
+
+  const _renderItemStatus = () => {
+    switch (itemFound) {
+      case "found":
+        return (
+          <div>
+            <p className="item-status-label item-status-found">ITEM FOUND AT INDEX {listMid}</p>
+            <p className="item-status-label item-status-found">COMPUTATIONS TAKEN {computationsTaken}</p>
+          </div>)
+      case "search":
+        return <p className="item-status-label item-status-search">SEARCHING...</p>
+      case "not-found":
+        return <p className="item-status-label item-status-not-found">ITEM NOT FOUND</p>
+      default:
+        return null;
+
+    }
+  }
 
   return (
     <div className={'main-container'}>
@@ -123,23 +142,22 @@ const Container = () => {
       <div className="key-container">
         <div className="flex-1 key-item-container">
           <div className="key-item key-item-low"></div>
-          <label>Low {listLow}</label>
+          <label>Low</label>
         </div>
         <div className="flex-1 key-item-container">
           <div className="key-item key-item-mid"></div>
-          <label>Mid {listMid}</label>
+          <label>Mid / Answer Found</label>
         </div>
         <div className="flex-1 key-item-container">
           <div className="key-item key-item-high"></div>
-          <label>High {listHigh}</label>
+          <label>High</label>
         </div>
       </div>
       <div className={"node-container"}>
         {_renderList({ list: itemList.current })}
       </div>
       <div>
-        <label>Computations Taken : </label>
-        <label>Item Found  :</label>
+        {_renderItemStatus()}
       </div>
     </div>
   );

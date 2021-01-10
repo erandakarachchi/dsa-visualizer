@@ -121,3 +121,16 @@
 .flex-1{
   flex: 1;
 }
+.item-status-label{
+  font-size: 2rem;
+  font-family: 'Montserrat', sans-serif;
+}
+.item-status-found{
+  color: #2ed573;
+}
+.item-status-not-found{
+  color:#f05454;
+}
+.item-status-search{
+  color:coral;
+}
