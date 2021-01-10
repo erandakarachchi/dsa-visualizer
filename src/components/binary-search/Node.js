@@ -14,7 +14,7 @@ function Node({ data, mid, low, high }) {
   }
   return (
     <div className={`node ${className}`}>
-      <label>{data}</label>
+      <p className={'node-value'}>{data}</p>
     </div>
   );
 }

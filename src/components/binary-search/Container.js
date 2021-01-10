@@ -34,15 +34,18 @@ function Container() {
   const [listLow, setListLow] = useState(0);
   const [listHigh, setListHigh] = useState(itemList.current.length - 1);
   const [itemFound, setItemFound] = useState("");
-  const delay = (delayInms) => {
+  const [searchKeyValue, setSearchKeyValue] = useState(10)
+
+  const delay = (delayInMS) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(2);
-      }, delayInms);
+      }, delayInMS); //delay in milliseconds
     });
   };
   const _renderList = ({ list }) => {
     console.log("RENDERING");
+    console.log(" LOW : ", listLow, "MID : ", listMid, "HIGH : ", listHigh);
     return list.map((elem, idx) => {
       if (idx === listMid) {
         return (
@@ -65,16 +68,23 @@ function Container() {
   };
 
   const _binarySearch = async (searchFor) => {
+    let count = 0;
     const list = [...itemList.current];
     let low = 0;
     let high = list.length - 1;
     let mid = 0;
     while (low <= high) {
+      count++;
       mid = Math.trunc((low + high) / 2);
       setListMid(mid);
-      await delay(1000);
+      await delay(500);
+      console.log("COMPARE : ", list[mid], " ==== ", searchFor)
       if (list[mid] === searchFor) {
+        console.log("COUNT :: ", count);
+        console.log("ITEM FOUND")
         setItemFound("found");
+        setListHigh(-1)
+        setListLow(-1)
         return true;
       } else if (searchFor > mid) {
         low = mid + 1;
@@ -84,28 +94,53 @@ function Container() {
         setListHigh(high);
       }
     }
+    console.log("COUNT :: ", count);
     setItemFound("not-found");
+    console.log("ITEM NOT FOUND : EXITING")
     return false;
   };
 
+  const _onInputChange = ({ target: { value } }) => {
+    console.log(value);
+    if (value && value !== searchKeyValue) {
+      try {
+        const search = parseInt(value);
+        setSearchKeyValue(search)
+      } catch (error) {
+
+      }
+
+    }
+  }
+
   useEffect(() => {
     if (!itemFound) {
-      _binarySearch(21);
+      console.log("SEARCH FOR : ", searchKeyValue);
+
     }
   }, [itemFound]);
 
   const _onStartPress = () => {
+    setListHigh(itemList.current.length - 1);
+    setListLow(0);
     setItemFound("");
+    _binarySearch(searchKeyValue);
   };
 
   return (
-    <div>
-      <div>Searching For 21</div>
+    <div className={'main-container'}>
+      <p className="header-title">Binary Search</p>
+      <div className={'control-container'}>
+        <input
+          className={"input-box"}
+          id="outlined"
+          placeholder={"Enter a value to search"}
+          onChange={_onInputChange}
+        />
+        <button className={"button-box"} onClick={_onStartPress}>Start</button>
+      </div>
       <div className={"container"}>
         {_renderList({ list: itemList.current })}
-        <div>
-          <button onClick={_onStartPress}>Start</button>
-        </div>
       </div>
     </div>
   );

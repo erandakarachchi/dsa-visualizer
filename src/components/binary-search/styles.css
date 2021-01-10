@@ -1,19 +1,36 @@
 .container {
+  flex: 6;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+}
+.main-container{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #222831;
+}
+.control-container{
+  flex: 1;
+  padding: 20px;
 }
 
 .node {
-  width: 50px;
-  height: 40px;
+  width: 80px;
+  height: 50px;
   margin: 10px;
-
   border-radius: 5px;
+  align-self: center;
+}
+.node-value{
+  color: #fff;
+  font-weight: 600;
 }
 
 .node-default {
-  background-color: #a4b0be;
+  background-color: #407088;
 }
 
 .node-mid {
@@ -26,4 +43,34 @@
 
 .node-high {
   background-color: #1e90ff;
+}
+
+.input-box{
+  height: 50px;
+  width: 50%;
+  border-radius: 10px;
+  outline: none;
+  border: 1px solid #fff;
+  padding-left: 20px;
+  padding-right: 20px;
+  color: gray;
+  font-size: 1.2rem;
+}
+.button-box{
+  height: 55px;
+  width: 20%;
+  border-radius: 10px;
+  outline: none;
+  border: 1px solid #f05454;
+  padding-left: 20px;
+  padding-right: 20px;
+  color: white;
+  font-size: 1.2rem;
+  margin-left: 20px;
+  background-color: #f05454;
+}
+
+.header-title{
+  font-size: 3rem;
+  color:#f05454;
 }
