@@ -2,17 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import Node from "./Node";
 import "./styles.css";
 
-function Container() {
+const Container = () => {
   const itemList = useRef([
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
     10,
     11,
     12,
@@ -29,10 +20,13 @@ function Container() {
     23,
     24,
     25,
+    26,
+    27,
+    28, 29, 30, 31, 32, 33, 34, 35, 36
   ]);
-  const [listMid, setListMid] = useState(0);
   const [listLow, setListLow] = useState(0);
   const [listHigh, setListHigh] = useState(itemList.current.length - 1);
+  const [listMid, setListMid] = useState(0);
   const [itemFound, setItemFound] = useState("");
   const [searchKeyValue, setSearchKeyValue] = useState(10)
 
@@ -44,8 +38,6 @@ function Container() {
     });
   };
   const _renderList = ({ list }) => {
-    console.log("RENDERING");
-    console.log(" LOW : ", listLow, "MID : ", listMid, "HIGH : ", listHigh);
     return list.map((elem, idx) => {
       if (idx === listMid) {
         return (
@@ -68,25 +60,22 @@ function Container() {
   };
 
   const _binarySearch = async (searchFor) => {
-    let count = 0;
     const list = [...itemList.current];
     let low = 0;
     let high = list.length - 1;
     let mid = 0;
     while (low <= high) {
-      count++;
       mid = Math.trunc((low + high) / 2);
       setListMid(mid);
       await delay(500);
-      console.log("COMPARE : ", list[mid], " ==== ", searchFor)
+      console.log("HIGH : ", high, ' MID : ', mid, ' LOW : ', low)
+      console.log(list[mid], "=== ", searchFor)
       if (list[mid] === searchFor) {
-        console.log("COUNT :: ", count);
-        console.log("ITEM FOUND")
         setItemFound("found");
         setListHigh(-1)
         setListLow(-1)
         return true;
-      } else if (searchFor > mid) {
+      } else if (searchFor > list[mid]) {
         low = mid + 1;
         setListLow(low);
       } else {
@@ -94,9 +83,7 @@ function Container() {
         setListHigh(high);
       }
     }
-    console.log("COUNT :: ", count);
     setItemFound("not-found");
-    console.log("ITEM NOT FOUND : EXITING")
     return false;
   };
 
@@ -107,18 +94,11 @@ function Container() {
         const search = parseInt(value);
         setSearchKeyValue(search)
       } catch (error) {
-
       }
-
     }
   }
 
-  useEffect(() => {
-    if (!itemFound) {
-      console.log("SEARCH FOR : ", searchKeyValue);
 
-    }
-  }, [itemFound]);
 
   const _onStartPress = () => {
     setListHigh(itemList.current.length - 1);
@@ -129,7 +109,8 @@ function Container() {
 
   return (
     <div className={'main-container'}>
-      <p className="header-title">Binary Search</p>
+      <label className="header-title">BINARY SEARCH</label>
+      <hr className='hr-line' />
       <div className={'control-container'}>
         <input
           className={"input-box"}
@@ -139,8 +120,26 @@ function Container() {
         />
         <button className={"button-box"} onClick={_onStartPress}>Start</button>
       </div>
-      <div className={"container"}>
+      <div className="key-container">
+        <div className="flex-1 key-item-container">
+          <div className="key-item key-item-low"></div>
+          <label>Low {listLow}</label>
+        </div>
+        <div className="flex-1 key-item-container">
+          <div className="key-item key-item-mid"></div>
+          <label>Mid {listMid}</label>
+        </div>
+        <div className="flex-1 key-item-container">
+          <div className="key-item key-item-high"></div>
+          <label>High {listHigh}</label>
+        </div>
+      </div>
+      <div className={"node-container"}>
         {_renderList({ list: itemList.current })}
+      </div>
+      <div>
+        <label>Computations Taken : </label>
+        <label>Item Found  :</label>
       </div>
     </div>
   );
